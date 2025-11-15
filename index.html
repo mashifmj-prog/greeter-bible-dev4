@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bible Greeter - Audio & Media</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #4a6fa5);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .feature-section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #4a6fa5;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: #4a6fa5;
+        }
+
+        /* Text-to-Speech Styles */
+        .tts-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .verse-display {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #e9ecef;
+        }
+
+        .verse-text {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .verse-reference {
+            color: #6c757d;
+            font-style: italic;
+            text-align: right;
+        }
+
+        .control-button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .play-button {
+            background: #28a745;
+            color: white;
+        }
+
+        .play-button:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .pause-button {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .pause-button:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+        }
+
+        .stop-button {
+            background: #dc3545;
+            color: white;
+        }
+
+        .stop-button:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .voice-selector {
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            min-width: 200px;
+        }
+
+        /* Background Music Styles */
+        .music-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .music-option {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .music-option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .music-option.active {
+            border-color: #4a6fa5;
+            background: #e3f2fd;
+        }
+
+        .music-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #4a6fa5;
+        }
+
+        .music-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .music-desc {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .volume-control {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        /* Meditation Timer Styles */
+        .timer-display {
+            font-size: 3rem;
+            text-align: center;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .timer-button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .start-button {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .reset-button {
+            background: #6c757d;
+            color: white;
+        }
+
+        .duration-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .duration-option {
+            padding: 10px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .duration-option.active {
+            background: #4a6fa5;
+            color: white;
+            border-color: #4a6fa5;
+        }
+
+        .verse-prompts {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #28a745;
+        }
+
+        .prompt-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .prompt-text {
+            font-style: italic;
+            color: #495057;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .tts-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .timer-display {
+                font-size: 2.5rem;
+            }
+            
+            .music-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎵 Bible Greeter - Audio & Media</h1>
+            <p>Enhanced spiritual experience with audio features</p>
+        </div>
+        
+        <div class="content">
+            <!-- Text-to-Speech Section -->
+            <div class="feature-section">
+                <h2 class="section-title">
+                    <i>🔊</i> Text-to-Speech
+                </h2>
+                <div class="verse-display">
+                    <div class="verse-text" id="currentVerse">
+                        "The Lord is my shepherd, I lack nothing. He makes me lie down in green pastures, he leads me beside quiet waters, he refreshes my soul."
+                    </div>
+                    <div class="verse-reference" id="verseReference">Psalm 23:1-3 (NIV)</div>
+                </div>
+                <div class="tts-controls">
+                    <select class="voice-selector" id="voiceSelector">
+                        <option value="">Select Voice...</option>
+                    </select>
+                    <button class="control-button play-button" id="playTTS">
+                        <i>▶️</i> Play
+                    </button>
+                    <button class="control-button pause-button hidden" id="pauseTTS">
+                        <i>⏸️</i> Pause
+                    </button>
+                    <button class="control-button stop-button" id="stopTTS">
+                        <i>⏹️</i> Stop
+                    </button>
+                </div>
+            </div>
+
+            <!-- Background Music Section -->
+            <div class="feature-section">
+                <h2 class="section-title">
+                    <i>🎵</i> Background Music
+                </h2>
+                <div class="music-grid" id="musicGrid">
+                    <!-- Music options will be populated by JavaScript -->
+                </div>
+                <div class="volume-control">
+                    <label>Volume: <span id="volumeLevel">50%</span></label>
+                    <input type="range" id="volumeSlider" min="0" max="100" value="50" class="volume-control">
+                </div>
+            </div>
+
+            <!-- Meditation Timer Section -->
+            <div class="feature-section">
+                <h2 class="section-title">
+                    <i>⏰</i> Meditation Timer
+                </h2>
+                <div class="timer-display" id="timerDisplay">05:00</div>
+                <div class="timer-controls">
+                    <button class="timer-button start-button" id="startTimer">Start Meditation</button>
+                    <button class="timer-button reset-button" id="resetTimer">Reset</button>
+                </div>
+                <div class="duration-selector">
+                    <div class="duration-option active" data-minutes="5">5 min</div>
+                    <div class="duration-option" data-minutes="10">10 min</div>
+                    <div class="duration-option" data-minutes="15">15 min</div>
+                    <div class="duration-option" data-minutes="20">20 min</div>
+                </div>
+                <div class="verse-prompts hidden" id="versePrompts">
+                    <div class="prompt-title">Meditation Prompt:</div>
+                    <div class="prompt-text" id="promptText">Breathe deeply and reflect on God's presence...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Text-to-Speech Implementation
+        class TextToSpeech {
+            constructor() {
+                this.synth = window.speechSynthesis;
+                this.utterance = null;
+                this.isPlaying = false;
+                this.voices = [];
+                
+                this.playBtn = document.getElementById('playTTS');
+                this.pauseBtn = document.getElementById('pauseTTS');
+                this.stopBtn = document.getElementById('stopTTS');
+                this.voiceSelector = document.getElementById('voiceSelector');
+                this.verseText = document.getElementById('currentVerse');
+                
+                this.init();
+            }
+            
+            init() {
+                this.loadVoices();
+                this.setupEventListeners();
+                
+                // Refresh voices when they are loaded
+                this.synth.onvoiceschanged = () => this.loadVoices();
+            }
+            
+            loadVoices() {
+                this.voices = this.synth.getVoices();
+                this.voiceSelector.innerHTML = '<option value="">Select Voice...</option>';
+                
+                this.voices.forEach(voice => {
+                    const option = document.createElement('option');
+                    option.value = voice.name;
+                    option.textContent = `${voice.name} (${voice.lang})`;
+                    this.voiceSelector.appendChild(option);
+                });
+            }
+            
+            setupEventListeners() {
+                this.playBtn.addEventListener('click', () => this.play());
+                this.pauseBtn.addEventListener('click', () => this.pause());
+                this.stopBtn.addEventListener('click', () => this.stop());
+            }
+            
+            play() {
+                if (this.isPlaying) {
+                    this.synth.resume();
+                    return;
+                }
+                
+                this.stop(); // Stop any current speech
+                
+                const selectedVoice = this.voiceSelector.value;
+                const voice = this.voices.find(v => v.name === selectedVoice) || this.voices[0];
+                
+                this.utterance = new SpeechSynthesisUtterance(this.verseText.textContent);
+                this.utterance.voice = voice;
+                this.utterance.rate = 0.8;
+                this.utterance.pitch = 1;
+                this.utterance.volume = 0.8;
+                
+                this.utterance.onstart = () => {
+                    this.isPlaying = true;
+                    this.playBtn.classList.add('hidden');
+                    this.pauseBtn.classList.remove('hidden');
+                };
+                
+                this.utterance.onend = () => {
+                    this.isPlaying = false;
+                    this.playBtn.classList.remove('hidden');
+                    this.pauseBtn.classList.add('hidden');
+                };
+                
+                this.synth.speak(this.utterance);
+            }
+            
+            pause() {
+                if (this.isPlaying) {
+                    this.synth.pause();
+                    this.playBtn.classList.remove('hidden');
+                    this.pauseBtn.classList.add('hidden');
+                }
+            }
+            
+            stop() {
+                this.synth.cancel();
+                this.isPlaying = false;
+                this.playBtn.classList.remove('hidden');
+                this.pauseBtn.classList.add('hidden');
+            }
+        }
+
+        // Background Music Implementation
+        class BackgroundMusic {
+            constructor() {
+                this.audioContext = null;
+                this.currentAudio = null;
+                this.isPlaying = false;
+                this.volume = 0.5;
+                
+                this.musicGrid = document.getElementById('musicGrid');
+                this.volumeSlider = document.getElementById('volumeSlider');
+                this.volumeLevel = document.getElementById('volumeLevel');
+                
+                this.musicOptions = [
+                    { id: 'soothing', title: 'Soothing Hymns', desc: 'Gentle instrumental hymns', icon: '🎹' },
+                    { id: 'nature', title: 'Nature Sounds', desc: 'Peaceful nature ambiance', icon: '🌿' },
+                    { id: 'meditation', title: 'Meditation', desc: 'Calming meditation music', icon: '🧘' },
+                    { id: 'worship', title: 'Worship', desc: 'Inspirational worship music', icon: '✨' }
+                ];
+                
+                this.init();
+            }
+            
+            init() {
+                this.renderMusicOptions();
+                this.setupEventListeners();
+            }
+            
+            renderMusicOptions() {
+                this.musicGrid.innerHTML = this.musicOptions.map(music => `
+                    <div class="music-option" data-music="${music.id}">
+                        <div class="music-icon">${music.icon}</div>
+                        <div class="music-title">${music.title}</div>
+                        <div class="music-desc">${music.desc}</div>
+                    </div>
+                `).join('');
+            }
+            
+            setupEventListeners() {
+                this.musicGrid.addEventListener('click', (e) => {
+                    const musicOption = e.target.closest('.music-option');
+                    if (musicOption) {
+                        this.selectMusic(musicOption.dataset.music);
+                    }
+                });
+                
+                this.volumeSlider.addEventListener('input', (e) => {
+                    this.volume = e.target.value / 100;
+                    this.volumeLevel.textContent = `${e.target.value}%`;
+                    if (this.currentAudio) {
+                        this.currentAudio.volume = this.volume;
+                    }
+                });
+            }
+            
+            selectMusic(musicId) {
+                // Remove active class from all options
+                document.querySelectorAll('.music-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                
+                // Add active class to selected option
+                document.querySelector(`[data-music="${musicId}"]`).classList.add('active');
+                
+                // In a real app, this would load actual audio files
+                // For demo, we'll simulate music playback
+                this.playMusic(musicId);
+            }
+            
+            playMusic(musicId) {
+                // Stop current music
+                if (this.currentAudio) {
+                    this.currentAudio.pause();
+                }
+                
+                // Simulate music playback (in real app, load actual audio)
+                console.log(`Playing ${musicId} music at volume ${this.volume}`);
+                this.isPlaying = true;
+                
+                // Show playback notification
+                this.showMusicNotification(musicId);
+            }
+            
+            showMusicNotification(musicId) {
+                const music = this.musicOptions.find(m => m.id === musicId);
+                alert(`Now playing: ${music.title}\n\nIn the full implementation, this would play actual background music.`);
+            }
+        }
+
+        // Meditation Timer Implementation
+        class MeditationTimer {
+            constructor() {
+                this.timer = null;
+                this.timeLeft = 5 * 60; // 5 minutes in seconds
+                this.isRunning = false;
+                this.selectedDuration = 5;
+                
+                this.timerDisplay = document.getElementById('timerDisplay');
+                this.startBtn = document.getElementById('startTimer');
+                this.resetBtn = document.getElementById('resetTimer');
+                this.durationOptions = document.querySelectorAll('.duration-option');
+                this.versePrompts = document.getElementById('versePrompts');
+                this.promptText = document.getElementById('promptText');
+                
+                this.meditationPrompts = [
+                    "Be still, and know that I am God. - Psalm 46:10",
+                    "The Lord is close to the brokenhearted and saves those who are crushed in spirit. - Psalm 34:18",
+                    "Cast all your anxiety on him because he cares for you. - 1 Peter 5:7",
+                    "I can do all this through him who gives me strength. - Philippians 4:13"
+                ];
+                
+                this.init();
+            }
+            
+            init() {
+                this.setupEventListeners();
+                this.updateDisplay();
+            }
+            
+            setupEventListeners() {
+                this.startBtn.addEventListener('click', () => this.toggleTimer());
+                this.resetBtn.addEventListener('click', () => this.resetTimer());
+                
+                this.durationOptions.forEach(option => {
+                    option.addEventListener('click', () => {
+                        this.selectDuration(option.dataset.minutes);
+                    });
+                });
+            }
+            
+            selectDuration(minutes) {
+                this.selectedDuration = parseInt(minutes);
+                
+                // Update UI
+                this.durationOptions.forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                document.querySelector(`[data-minutes="${minutes}"]`).classList.add('active');
+                
+                this.resetTimer();
+            }
+            
+            toggleTimer() {
+                if (this.isRunning) {
+                    this.pauseTimer();
+                } else {
+                    this.startTimer();
+                }
+            }
+            
+            startTimer() {
+                this.isRunning = true;
+                this.startBtn.textContent = 'Pause Meditation';
+                
+                this.timer = setInterval(() => {
+                    this.timeLeft--;
+                    this.updateDisplay();
+                    
+                    if (this.timeLeft <= 0) {
+                        this.completeTimer();
+                    }
+                    
+                    // Show verse prompts at intervals
+                    if (this.timeLeft % 60 === 0 && this.timeLeft > 0) {
+                        this.showVersePrompt();
+                    }
+                }, 1000);
+                
+                this.versePrompts.classList.remove('hidden');
+                this.showVersePrompt();
+            }
+            
+            pauseTimer() {
+                this.isRunning = false;
+                this.startBtn.textContent = 'Resume Meditation';
+                clearInterval(this.timer);
+            }
+            
+            resetTimer() {
+                this.isRunning = false;
+                this.startBtn.textContent = 'Start Meditation';
+                clearInterval(this.timer);
+                this.timeLeft = this.selectedDuration * 60;
+                this.updateDisplay();
+                this.versePrompts.classList.add('hidden');
+            }
+            
+            completeTimer() {
+                clearInterval(this.timer);
+                this.isRunning = false;
+                this.startBtn.textContent = 'Start Meditation';
+                alert('Meditation session complete! 🙏\n\nTake a moment to carry this peace with you throughout your day.');
+                this.resetTimer();
+            }
+            
+            updateDisplay() {
+                const minutes = Math.floor(this.timeLeft / 60);
+                const seconds = this.timeLeft % 60;
+                this.timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            showVersePrompt() {
+                const randomPrompt = this.meditationPrompts[
+                    Math.floor(Math.random() * this.meditationPrompts.length)
+                ];
+                this.promptText.textContent = randomPrompt;
+            }
+        }
+
+        // Initialize all features when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const tts = new TextToSpeech();
+            const music = new BackgroundMusic();
+            const timer = new MeditationTimer();
+            
+            console.log('🎵 Audio & Media features initialized!');
+        });
+    </script>
+</body>
+</html>
