@@ -3,19 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bible Greeter - Community & Scalability</title>
+    <title>Bible Greeter - Dynamic & Complete</title>
     <link rel="manifest" href="/manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Crimson+Text:wght@400;600&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        /* === SCALABILITY CSS VARIABLES === */
         :root {
             --primary-color: #4a6fa5;
             --secondary-color: #2c3e50;
-            --accent-color: #e67e22;
-            --success-color: #27ae60;
-            --community-color: #9b59b6;
-            --offline-color: #95a5a6;
-            --analytics-color: #3498db;
             --background-color: #f8f9fa;
             --text-color: #333;
             --card-bg: #ffffff;
@@ -23,9 +17,55 @@
             --shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
             --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             
-            /* Font Variables */
-            --font-primary: 'Inter', 'Segoe UI', system-ui, sans-serif;
-            --font-heading: 'Playfair Display', 'Times New Roman', serif;
+            /* Time-based theme variables */
+            --dawn-color: #ff9a76;
+            --morning-color: #4a6fa5;
+            --daylight-color: #27ae60;
+            --sunset-color: #e67e22;
+            --evening-color: #9b59b6;
+            --night-color: #2c3e50;
+            
+            --font-primary: 'Inter', sans-serif;
+            --font-heading: 'Playfair Display', serif;
+        }
+
+        /* Time-based themes */
+        .theme-dawn {
+            --primary-color: var(--dawn-color);
+            --secondary-color: #d35400;
+            --background-color: #fff5f0;
+        }
+
+        .theme-morning {
+            --primary-color: var(--morning-color);
+            --secondary-color: #2c3e50;
+            --background-color: #f0f7ff;
+        }
+
+        .theme-daylight {
+            --primary-color: var(--daylight-color);
+            --secondary-color: #229954;
+            --background-color: #f0fff4;
+        }
+
+        .theme-sunset {
+            --primary-color: var(--sunset-color);
+            --secondary-color: #c0392b;
+            --background-color: #fffaf0;
+        }
+
+        .theme-evening {
+            --primary-color: var(--evening-color);
+            --secondary-color: #8e44ad;
+            --background-color: #f8f0ff;
+        }
+
+        .theme-night {
+            --primary-color: var(--night-color);
+            --secondary-color: #34495e;
+            --background-color: #1a1a2e;
+            --text-color: #e0e0e0;
+            --card-bg: #2d2d44;
         }
 
         * {
@@ -40,7 +80,7 @@
             min-height: 100vh;
             line-height: 1.7;
             font-family: var(--font-primary);
-            font-weight: 400;
+            transition: var(--transition);
         }
 
         .container {
@@ -56,7 +96,7 @@
             background: var(--card-bg);
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
-            position: relative;
+            transition: var(--transition);
         }
 
         .header h1 {
@@ -64,7 +104,16 @@
             color: var(--primary-color);
             margin-bottom: 15px;
             font-family: var(--font-heading);
-            font-weight: 700;
+        }
+
+        .time-theme-indicator {
+            display: inline-block;
+            padding: 8px 16px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 10px;
         }
 
         .main-grid {
@@ -93,24 +142,9 @@
         }
 
         .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             padding: 25px;
-        }
-
-        .card-header.community {
-            background: linear-gradient(135deg, var(--community-color), #8e44ad);
-        }
-
-        .card-header.offline {
-            background: linear-gradient(135deg, var(--offline-color), #7f8c8d);
-        }
-
-        .card-header.analytics {
-            background: linear-gradient(135deg, var(--analytics-color), #2980b9);
-        }
-
-        .card-header.global {
-            background: linear-gradient(135deg, var(--accent-color), #d35400);
         }
 
         .card-title {
@@ -134,39 +168,110 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
-        }
-
-        .btn-primary {
             background: var(--primary-color);
             color: white;
         }
 
-        .btn-primary:hover {
+        .btn:hover {
             background: var(--secondary-color);
             transform: translateY(-2px);
         }
 
-        .btn-community {
-            background: var(--community-color);
+        .btn-secondary {
+            background: var(--background-color);
+            color: var(--text-color);
+            border: 2px solid var(--background-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary-color);
+        }
+
+        /* Bible Reader Styles */
+        .bible-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .bible-select {
+            flex: 1;
+            min-width: 150px;
+            padding: 12px;
+            border: 2px solid var(--background-color);
+            border-radius: 8px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+
+        .chapter-navigation {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--primary-color);
+            background: transparent;
+            color: var(--primary-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .nav-btn:hover {
+            background: var(--primary-color);
             color: white;
         }
 
-        .btn-community:hover {
-            background: #8e44ad;
-            transform: translateY(-2px);
+        .bible-content {
+            background: var(--background-color);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            max-height: 500px;
+            overflow-y: auto;
+            line-height: 1.8;
         }
 
-        /* === PHASE 4.1: SOCIAL FEATURES === */
-        
-        /* Prayer Groups */
-        .groups-grid {
+        .verse {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .verse:hover {
+            background: rgba(0,0,0,0.05);
+        }
+
+        .verse-number {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .verse.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .verse.active .verse-number {
+            color: white;
+        }
+
+        /* Interactive Components */
+        .interactive-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin-bottom: 20px;
         }
 
-        .group-card {
+        .interactive-card {
             background: var(--background-color);
             padding: 25px;
             border-radius: var(--border-radius);
@@ -176,792 +281,236 @@
             border: 2px solid transparent;
         }
 
-        .group-card:hover {
-            border-color: var(--community-color);
+        .interactive-card:hover {
+            border-color: var(--primary-color);
             transform: translateY(-3px);
         }
 
-        .group-icon {
+        .interactive-icon {
             font-size: 2.5rem;
             margin-bottom: 15px;
         }
 
-        .group-members {
-            display: flex;
-            justify-content: center;
-            margin: 15px 0;
-        }
-
-        .member-avatar {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            margin-left: -8px;
-            border: 2px solid white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .member-avatar:first-child {
-            margin-left: 0;
-        }
-
-        /* Prayer Requests */
-        .prayer-requests {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .prayer-request {
-            background: var(--background-color);
-            padding: 20px;
-            border-radius: var(--border-radius);
-            margin-bottom: 15px;
-            border-left: 4px solid var(--community-color);
-        }
-
-        .request-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 10px;
-        }
-
-        .request-author {
-            font-weight: 600;
-        }
-
-        .request-time {
-            font-size: 0.8rem;
-            opacity: 0.7;
-        }
-
-        .request-content {
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-
-        .request-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .action-btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 20px;
-            background: var(--card-bg);
-            color: var(--text-color);
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: var(--transition);
-        }
-
-        .action-btn:hover {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        /* Testimony Sharing */
-        .testimonies-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .testimony-card {
-            background: var(--background-color);
-            padding: 25px;
-            border-radius: var(--border-radius);
-            transition: var(--transition);
-        }
-
-        .testimony-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow);
-        }
-
-        .testimony-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .testimony-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--community-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-        }
-
-        .testimony-meta {
-            flex: 1;
-        }
-
-        .testimony-author {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .testimony-date {
-            font-size: 0.8rem;
-            opacity: 0.7;
-        }
-
-        /* Verse Challenges */
-        .challenges-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .challenge-card {
-            background: var(--background-color);
-            padding: 20px;
-            border-radius: var(--border-radius);
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .challenge-card.active {
-            background: var(--community-color);
-            color: white;
-        }
-
-        .challenge-card:hover {
-            transform: translateY(-3px);
-        }
-
-        .challenge-icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        .challenge-progress {
-            height: 6px;
-            background: rgba(0,0,0,0.1);
-            border-radius: 3px;
-            margin: 15px 0;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: currentColor;
-            border-radius: 3px;
-            transition: width 0.5s ease;
-        }
-
-        /* === PHASE 4.2: ADVANCED CAPABILITIES === */
-        
-        /* Offline Status */
-        .offline-status {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 20px;
-            background: var(--background-color);
-            border-radius: var(--border-radius);
-            margin-bottom: 20px;
-        }
-
-        .status-indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-
-        .status-online {
-            background: var(--success-color);
-            animation: pulse 2s infinite;
-        }
-
-        .status-offline {
-            background: var(--offline-color);
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        /* Cache Management */
-        .cache-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .cache-stat {
-            background: var(--background-color);
-            padding: 20px;
-            border-radius: var(--border-radius);
-            text-align: center;
-        }
-
-        .cache-number {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 5px;
-        }
-
-        .cache-label {
-            font-size: 0.8rem;
-            opacity: 0.8;
-        }
-
-        /* Push Notifications */
-        .notification-settings {
-            display: grid;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .notification-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            background: var(--background-color);
-            border-radius: var(--border-radius);
-        }
-
-        .notification-info {
-            flex: 1;
-        }
-
-        .notification-title {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .notification-desc {
-            font-size: 0.9rem;
-            opacity: 0.7;
-        }
-
-        .toggle {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
-
-        .toggle input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 24px;
-        }
-
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .toggle-slider {
-            background-color: var(--success-color);
-        }
-
-        input:checked + .toggle-slider:before {
-            transform: translateX(26px);
-        }
-
-        /* Multi-language Support */
-        .language-grid {
+        .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
         }
 
-        .language-option {
-            padding: 20px 15px;
-            border: 2px solid var(--background-color);
-            border-radius: var(--border-radius);
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .language-option.active {
-            border-color: var(--primary-color);
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .language-option:hover {
-            transform: translateY(-2px);
-        }
-
-        .language-flag {
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        /* Advanced Analytics */
-        .analytics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .analytics-card {
+        .stat-card {
             background: var(--background-color);
             padding: 20px;
             border-radius: var(--border-radius);
             text-align: center;
         }
 
-        .analytics-value {
+        .stat-number {
             font-size: 1.8rem;
             font-weight: 700;
-            color: var(--analytics-color);
+            color: var(--primary-color);
             margin-bottom: 5px;
         }
 
-        .analytics-label {
-            font-size: 0.8rem;
-            opacity: 0.8;
-        }
-
-        .privacy-badge {
-            display: inline-block;
-            background: var(--success-color);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            margin-left: 10px;
-        }
-
-        /* Responsive Design */
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2.2rem;
             }
             
-            .groups-grid,
-            .testimonies-grid,
-            .challenges-grid {
+            .bible-controls {
+                flex-direction: column;
+            }
+            
+            .interactive-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .cache-stats,
-            .analytics-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .language-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        /* Utility Classes */
-        .hidden {
-            display: none !important;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .mt-20 {
-            margin-top: 20px;
-        }
-
-        .mb-20 {
-            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
-    <!-- Main App Container -->
     <div class="container">
-        <!-- Header -->
         <div class="header">
-            <h1>🌍 Bible Greeter Community</h1>
-            <p>Connect, grow, and share your faith journey</p>
+            <h1>📖 Bible Greeter</h1>
+            <p>Dynamic Bible reading with time-based themes</p>
+            <div class="time-theme-indicator" id="timeThemeIndicator">
+                Loading theme...
+            </div>
         </div>
 
-        <!-- Main Content Grid -->
         <div class="main-grid">
-            <!-- Left Column - Community Features -->
             <div class="content-area">
-                <!-- Prayer Groups -->
+                <!-- Dynamic Bible Reader -->
                 <div class="card">
-                    <div class="card-header community">
-                        <div class="card-title">🙏 Prayer Groups</div>
-                        <div class="card-subtitle">Join local prayer communities</div>
+                    <div class="card-header">
+                        <div class="card-title">📚 Bible Reader</div>
+                        <div class="card-subtitle">Multiple versions with real functionality</div>
                     </div>
                     <div class="card-content">
-                        <div class="groups-grid">
-                            <div class="group-card" data-group="church">
-                                <div class="group-icon">💒</div>
-                                <div class="group-name">Church Family</div>
-                                <div class="group-members">
-                                    <div class="member-avatar">JD</div>
-                                    <div class="member-avatar">SJ</div>
-                                    <div class="member-avatar">MP</div>
-                                    <div class="member-avatar">+5</div>
-                                </div>
-                                <div class="group-stats">12 members • 8 active</div>
+                        <div class="bible-controls">
+                            <select class="bible-select" id="bookSelect">
+                                <option value="genesis">Genesis</option>
+                                <option value="exodus">Exodus</option>
+                                <option value="psalms">Psalms</option>
+                                <option value="matthew">Matthew</option>
+                                <option value="john">John</option>
+                                <option value="romans">Romans</option>
+                            </select>
+                            
+                            <select class="bible-select" id="chapterSelect">
+                                <!-- Chapters will be populated dynamically -->
+                            </select>
+                            
+                            <select class="bible-select" id="versionSelect">
+                                <option value="niv">NIV (New International Version)</option>
+                                <option value="esv">ESV (English Standard Version)</option>
+                                <option value="kjv">KJV (King James Version)</option>
+                                <option value="nlt">NLT (New Living Translation)</option>
+                                <option value="nasb">NASB (New American Standard Bible)</option>
+                            </select>
+                        </div>
+
+                        <div class="chapter-navigation">
+                            <button class="nav-btn" id="prevChapter">← Previous</button>
+                            <div style="flex: 1; text-align: center; font-weight: 600;" id="chapterDisplay">
+                                Select a book and chapter
                             </div>
-                            <div class="group-card" data-group="family">
-                                <div class="group-icon">👨‍👩‍👧‍👦</div>
-                                <div class="group-name">Family Prayer</div>
-                                <div class="group-members">
-                                    <div class="member-avatar">JD</div>
-                                    <div class="member-avatar">SJ</div>
-                                    <div class="member-avatar">MJ</div>
-                                </div>
-                                <div class="group-stats">8 members • 6 active</div>
-                            </div>
-                            <div class="group-card" data-group="youth">
-                                <div class="group-icon">🌟</div>
-                                <div class="group-name">Youth Bible Study</div>
-                                <div class="group-members">
-                                    <div class="member-avatar">TJ</div>
-                                    <div class="member-avatar">EK</div>
-                                    <div class="member-avatar">+10</div>
-                                </div>
-                                <div class="group-stats">15 members • 12 active</div>
+                            <button class="nav-btn" id="nextChapter">Next →</button>
+                        </div>
+
+                        <div class="bible-content" id="bibleContent">
+                            <div style="text-align: center; padding: 40px; opacity: 0.7;">
+                                Select a book, chapter, and version to start reading
                             </div>
                         </div>
 
-                        <!-- Prayer Requests -->
-                        <h3 class="mt-20 mb-20">📝 Recent Prayer Requests</h3>
-                        <div class="prayer-requests">
-                            <div class="prayer-request">
-                                <div class="request-header">
-                                    <div class="request-author">Sarah Johnson</div>
-                                    <div class="request-time">2 hours ago</div>
-                                </div>
-                                <div class="request-content">
-                                    Please pray for my friend Maria who is recovering from surgery. She needs strength and healing during this time.
-                                </div>
-                                <div class="request-actions">
-                                    <button class="action-btn">🙏 Pray</button>
-                                    <button class="action-btn">💬 Encourage</button>
-                                    <button class="action-btn">🔄 Share</button>
-                                </div>
-                            </div>
-                            <div class="prayer-request">
-                                <div class="request-header">
-                                    <div class="request-author">Mike Peterson</div>
-                                    <div class="request-time">5 hours ago</div>
-                                </div>
-                                <div class="request-content">
-                                    Seeking guidance for an important career decision. Wisdom and clarity needed for the path ahead.
-                                </div>
-                                <div class="request-actions">
-                                    <button class="action-btn">🙏 Pray</button>
-                                    <button class="action-btn">💬 Encourage</button>
-                                    <button class="action-btn">🔄 Share</button>
-                                </div>
-                            </div>
+                        <div class="text-center mt-20">
+                            <button class="btn" id="shareVerse">
+                                📤 Share Verse
+                            </button>
+                            <button class="btn-secondary" id="addBookmark">
+                                🔖 Bookmark
+                            </button>
+                            <button class="btn-secondary" id="addNote">
+                                📝 Add Note
+                            </button>
                         </div>
-                        <button class="btn btn-community" style="width: 100%; margin-top: 20px;">
-                            + Add Prayer Request
-                        </button>
                     </div>
                 </div>
 
-                <!-- Testimony Sharing -->
+                <!-- Interactive Features -->
                 <div class="card">
-                    <div class="card-header community">
-                        <div class="card-title">🌟 Testimony Sharing</div>
-                        <div class="card-subtitle">Share what God is doing in your life</div>
+                    <div class="card-header">
+                        <div class="card-title">🎯 Interactive Features</div>
+                        <div class="card-subtitle">Dynamic buttons with real functionality</div>
                     </div>
                     <div class="card-content">
-                        <div class="testimonies-grid">
-                            <div class="testimony-card">
-                                <div class="testimony-header">
-                                    <div class="testimony-avatar">SJ</div>
-                                    <div class="testimony-meta">
-                                        <div class="testimony-author">Sarah Johnson</div>
-                                        <div class="testimony-date">3 days ago</div>
-                                    </div>
-                                </div>
-                                <div class="testimony-content">
-                                    God answered our prayers for healing! My mother's test results came back clear today. Thank you everyone for praying!
-                                </div>
-                                <div class="testimony-actions">
-                                    <button class="action-btn">👍 12</button>
-                                    <button class="action-btn">💬 3</button>
-                                </div>
+                        <div class="interactive-grid">
+                            <div class="interactive-card" id="dailyVerseBtn">
+                                <div class="interactive-icon">📖</div>
+                                <div>Daily Verse</div>
+                                <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 5px;">Get a new verse</div>
                             </div>
-                            <div class="testimony-card">
-                                <div class="testimony-header">
-                                    <div class="testimony-avatar">MP</div>
-                                    <div class="testimony-meta">
-                                        <div class="testimony-author">Mike Peterson</div>
-                                        <div class="testimony-date">1 week ago</div>
-                                    </div>
-                                </div>
-                                <div class="testimony-content">
-                                    After months of unemployment, God provided the perfect job opportunity! Trust in His timing!
-                                </div>
-                                <div class="testimony-actions">
-                                    <button class="action-btn">👍 24</button>
-                                    <button class="action-btn">💬 8</button>
-                                </div>
+                            <div class="interactive-card" id="audioPlayBtn">
+                                <div class="interactive-icon">🔊</div>
+                                <div>Audio Bible</div>
+                                <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 5px;">Listen to Scripture</div>
+                            </div>
+                            <div class="interactive-card" id="themeCycleBtn">
+                                <div class="interactive-icon">🎨</div>
+                                <div>Cycle Theme</div>
+                                <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 5px;">Change appearance</div>
+                            </div>
+                            <div class="interactive-card" id="randomChapterBtn">
+                                <div class="interactive-icon">🎲</div>
+                                <div>Random Chapter</div>
+                                <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 5px;">Explore randomly</div>
                             </div>
                         </div>
-                        <button class="btn btn-community" style="width: 100%; margin-top: 20px;">
-                            ✍️ Share Your Testimony
-                        </button>
-                    </div>
-                </div>
 
-                <!-- Verse Challenges -->
-                <div class="card">
-                    <div class="card-header community">
-                        <div class="card-title">🎯 Verse Challenges</div>
-                        <div class="card-subtitle">Community Bible engagement</div>
-                    </div>
-                    <div class="card-content">
-                        <div class="challenges-grid">
-                            <div class="challenge-card active">
-                                <div class="challenge-icon">📖</div>
-                                <div class="challenge-title">7-Day Psalms</div>
-                                <div class="challenge-progress">
-                                    <div class="progress-fill" style="width: 85%"></div>
-                                </div>
-                                <div class="challenge-stats">6/7 days completed</div>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-number" id="versesRead">0</div>
+                                <div class="stat-label">Verses Read</div>
                             </div>
-                            <div class="challenge-card">
-                                <div class="challenge-icon">💪</div>
-                                <div class="challenge-title">Memory Marathon</div>
-                                <div class="challenge-progress">
-                                    <div class="progress-fill" style="width: 60%"></div>
-                                </div>
-                                <div class="challenge-stats">3/5 verses memorized</div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="chaptersRead">0</div>
+                                <div class="stat-label">Chapters</div>
                             </div>
-                            <div class="challenge-card">
-                                <div class="challenge-icon">🙏</div>
-                                <div class="challenge-title">Prayer Warrior</div>
-                                <div class="challenge-progress">
-                                    <div class="progress-fill" style="width: 30%"></div>
-                                </div>
-                                <div class="challenge-stats">3/10 days completed</div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="bookmarksCount">0</div>
+                                <div class="stat-label">Bookmarks</div>
                             </div>
-                        </div>
-                        <div style="text-align: center; margin-top: 20px;">
-                            <div style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 15px;">
-                                Community Progress: 142 people participating
+                            <div class="stat-card">
+                                <div class="stat-number" id="readingTime">0</div>
+                                <div class="stat-label">Minutes</div>
                             </div>
-                            <button class="btn btn-primary">Join Challenge</button>
-                            <button class="btn btn-secondary" style="margin-left: 10px;">Create Challenge</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Column - Advanced Capabilities -->
             <div class="sidebar">
-                <!-- Offline PWA -->
+                <!-- Current Reading Progress -->
                 <div class="card">
-                    <div class="card-header offline">
-                        <div class="card-title">📱 Offline PWA</div>
-                        <div class="card-subtitle">Works anywhere, anytime</div>
+                    <div class="card-header">
+                        <div class="card-title">📊 Reading Progress</div>
                     </div>
                     <div class="card-content">
-                        <div class="offline-status">
-                            <div class="status-indicator status-online"></div>
-                            <div>Online - All features available</div>
-                        </div>
-
-                        <div class="cache-stats">
-                            <div class="cache-stat">
-                                <div class="cache-number">42</div>
-                                <div class="cache-label">Verses Cached</div>
-                            </div>
-                            <div class="cache-stat">
-                                <div class="cache-number">15</div>
-                                <div class="cache-label">Devotionals</div>
-                            </div>
-                            <div class="cache-stat">
-                                <div class="cache-number">8.7MB</div>
-                                <div class="cache-label">Storage Used</div>
-                            </div>
-                            <div class="cache-stat">
-                                <div class="cache-number">7 days</div>
-                                <div class="cache-label">Offline Access</div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color); margin-bottom: 10px;" id="completionPercentage">0%</div>
+                            <div style="opacity: 0.8; margin-bottom: 20px;">Bible Completion</div>
+                            
+                            <div style="background: var(--background-color); padding: 20px; border-radius: var(--border-radius);">
+                                <div style="font-weight: 600; margin-bottom: 10px;">Current Book:</div>
+                                <div style="font-size: 1.2rem; color: var(--primary-color);" id="currentBook">None</div>
+                                <div style="margin-top: 15px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                        <span>Progress:</span>
+                                        <span id="bookProgress">0/0 chapters</span>
+                                    </div>
+                                    <div style="height: 6px; background: #e0e0e0; border-radius: 3px; overflow: hidden;">
+                                        <div style="height: 100%; background: var(--primary-color); border-radius: 3px; width: 0%; transition: width 0.5s ease;" id="bookProgressBar"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                    </div>
+                </div>
 
-                        <button class="btn btn-primary" style="width: 100%;">
-                            ⬇️ Download for Offline
+                <!-- Quick Actions -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">⚡ Quick Actions</div>
+                    </div>
+                    <div class="card-content">
+                        <button class="btn" style="width: 100%; margin-bottom: 10px;" id="quickBookmarkBtn">
+                            🔖 Quick Bookmark
+                        </button>
+                        <button class="btn-secondary" style="width: 100%; margin-bottom: 10px;" id="shareProgressBtn">
+                            📤 Share Progress
+                        </button>
+                        <button class="btn-secondary" style="width: 100%;" id="readingPlanBtn">
+                            📚 Start Plan
                         </button>
                     </div>
                 </div>
 
-                <!-- Push Notifications -->
+                <!-- Theme Controls -->
                 <div class="card">
-                    <div class="card-header offline">
-                        <div class="card-title">🔔 Push Notifications</div>
-                        <div class="card-subtitle">Stay connected and motivated</div>
+                    <div class="card-header">
+                        <div class="card-title">🎨 Theme Controls</div>
                     </div>
                     <div class="card-content">
-                        <div class="notification-settings">
-                            <div class="notification-item">
-                                <div class="notification-info">
-                                    <div class="notification-title">Daily Verse</div>
-                                    <div class="notification-desc">Receive a new verse each day</div>
-                                </div>
-                                <label class="toggle">
-                                    <input type="checkbox" checked>
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            <div class="notification-item">
-                                <div class="notification-info">
-                                    <div class="notification-title">Prayer Reminders</div>
-                                    <div class="notification-desc">Daily prayer time alerts</div>
-                                </div>
-                                <label class="toggle">
-                                    <input type="checkbox" checked>
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            <div class="notification-item">
-                                <div class="notification-info">
-                                    <div class="notification-title">Group Updates</div>
-                                    <div class="notification-desc">Prayer group activities</div>
-                                </div>
-                                <label class="toggle">
-                                    <input type="checkbox">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
+                        <div style="margin-bottom: 15px;">
+                            <div style="font-weight: 600; margin-bottom: 10px;">Current Time: <span id="currentTime"></span></div>
+                            <div style="font-size: 0.9rem; opacity: 0.7;">Theme updates automatically</div>
                         </div>
-                        <button class="btn btn-secondary" style="width: 100%;">
-                            ⚙️ Notification Settings
+                        <button class="btn-secondary" style="width: 100%; margin-bottom: 10px;" id="manualThemeBtn">
+                            🎨 Manual Override
                         </button>
-                    </div>
-                </div>
-
-                <!-- Multi-language Support -->
-                <div class="card">
-                    <div class="card-header global">
-                        <div class="card-title">🌐 Multi-language</div>
-                        <div class="card-subtitle">Global accessibility</div>
-                    </div>
-                    <div class="card-content">
-                        <div class="language-grid">
-                            <div class="language-option active">
-                                <div class="language-flag">🇺🇸</div>
-                                <div>English</div>
-                            </div>
-                            <div class="language-option">
-                                <div class="language-flag">🇪🇸</div>
-                                <div>Español</div>
-                            </div>
-                            <div class="language-option">
-                                <div class="language-flag">🇫🇷</div>
-                                <div>Français</div>
-                            </div>
-                            <div class="language-option">
-                                <div class="language-flag">🇩🇪</div>
-                                <div>Deutsch</div>
-                            </div>
-                            <div class="language-option">
-                                <div class="language-flag">🇵🇹</div>
-                                <div>Português</div>
-                            </div>
-                            <div class="language-option">
-                                <div class="language-flag">🇨🇳</div>
-                                <div>中文</div>
-                            </div>
-                        </div>
-                        <div style="background: var(--background-color); padding: 20px; border-radius: var(--border-radius); margin-top: 15px;">
-                            <div style="font-weight: 600; margin-bottom: 10px;">Sample Translation:</div>
-                            <div style="line-height: 1.6; font-style: italic;">
-                                "For I know the plans I have for you," declares the Lord, "plans to prosper you and not to harm you, plans to give you hope and a future."
-                            </div>
-                            <div style="text-align: right; color: var(--primary-color); margin-top: 10px; font-size: 0.9rem;">
-                                Jeremiah 29:11
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Advanced Analytics -->
-                <div class="card">
-                    <div class="card-header analytics">
-                        <div class="card-title">📊 Advanced Analytics <span class="privacy-badge">PRIVACY-FOCUSED</span></div>
-                        <div class="card-subtitle">Insights with privacy protection</div>
-                    </div>
-                    <div class="card-content">
-                        <div class="analytics-grid">
-                            <div class="analytics-card">
-                                <div class="analytics-value">87%</div>
-                                <div class="analytics-label">Engagement</div>
-                            </div>
-                            <div class="analytics-card">
-                                <div class="analytics-value">42</div>
-                                <div class="analytics-label">Active Days</div>
-                            </div>
-                            <div class="analytics-card">
-                                <div class="analytics-value">156</div>
-                                <div class="analytics-label">Prayers</div>
-                            </div>
-                            <div class="analytics-card">
-                                <div class="analytics-value">28</div>
-                                <div class="analytics-label">Friends</div>
-                            </div>
-                        </div>
-                        <div style="background: var(--background-color); padding: 20px; border-radius: var(--border-radius); margin-top: 15px;">
-                            <div style="text-align: center;">
-                                <div style="font-weight: 600; margin-bottom: 10px;">Weekly Activity</div>
-                                <div style="display: flex; justify-content: space-between; align-items: end; height: 60px; margin: 20px 0;">
-                                    <div style="width: 12%; background: var(--analytics-color); height: 40%; border-radius: 2px;"></div>
-                                    <div style="width: 12%; background: var(--analytics-color); height: 60%; border-radius: 2px;"></div>
-                                    <div style="width: 12%; background: var(--analytics-color); height: 80%; border-radius: 2px;"></div>
-                                    <div style="width: 12%; background: var(--analytics-color); height: 100%; border-radius: 2px;"></div>
-                                    <div style="width: 12%; background: var(--analytics-color); height: 70%; border-radius: 2px;"></div>
-                                    <div style="width: 12%; background: var(--analytics-color); height: 90%; border-radius: 2px;"></div>
-                                    <div style="width: 12%; background: var(--analytics-color); height: 50%; border-radius: 2px;"></div>
-                                </div>
-                                <div style="font-size: 0.8rem; opacity: 0.7;">All data anonymized and encrypted</div>
-                            </div>
-                        </div>
+                        <button class="btn-secondary" style="width: 100%;" id="resetThemeBtn">
+                            🔄 Reset to Time
+                        </button>
                     </div>
                 </div>
             </div>
@@ -969,422 +518,192 @@
     </div>
 
     <script>
-        // === PHASE 4: SCALABILITY & COMMUNITY SYSTEM ===
-        class CommunitySystem {
+        // === DYNAMIC BIBLE DATA ===
+        class BibleData {
             constructor() {
-                this.prayerGroups = [];
-                this.testimonies = [];
-                this.challenges = [];
-                this.currentLanguage = 'en';
-                this.offlineEnabled = false;
-                this.notificationsEnabled = false;
+                this.books = {
+                    genesis: { chapters: 50, name: "Genesis" },
+                    exodus: { chapters: 40, name: "Exodus" },
+                    psalms: { chapters: 150, name: "Psalms" },
+                    matthew: { chapters: 28, name: "Matthew" },
+                    john: { chapters: 21, name: "John" },
+                    romans: { chapters: 16, name: "Romans" }
+                };
+
+                // Sample verse data for demonstration
+                this.verses = {
+                    genesis: {
+                        1: [
+                            "1 In the beginning God created the heavens and the earth.",
+                            "2 Now the earth was formless and empty, darkness was over the surface of the deep, and the Spirit of God was hovering over the waters.",
+                            "3 And God said, \"Let there be light,\" and there was light.",
+                            "4 God saw that the light was good, and he separated the light from the darkness.",
+                            "5 God called the light \"day,\" and the darkness he called \"night.\" And there was evening, and there was morning—the first day."
+                        ],
+                        2: [
+                            "1 Thus the heavens and the earth were completed in all their vast array.",
+                            "2 By the seventh day God had finished the work he had been doing; so on the seventh day he rested from all his work.",
+                            "3 Then God blessed the seventh day and made it holy, because on it he rested from all the work of creating that he had done."
+                        ]
+                    },
+                    psalms: {
+                        23: [
+                            "1 The Lord is my shepherd, I lack nothing.",
+                            "2 He makes me lie down in green pastures, he leads me beside quiet waters,",
+                            "3 he refreshes my soul. He guides me along the right paths for his name's sake.",
+                            "4 Even though I walk through the darkest valley, I will fear no evil, for you are with me; your rod and your staff, they comfort me.",
+                            "5 You prepare a table before me in the presence of my enemies. You anoint my head with oil; my cup overflows.",
+                            "6 Surely your goodness and love will follow me all the days of my life, and I will dwell in the house of the Lord forever."
+                        ]
+                    },
+                    john: {
+                        3: [
+                            "16 For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.",
+                            "17 For God did not send his Son into the world to condemn the world, but to save the world through him.",
+                            "18 Whoever believes in him is not condemned, but whoever does not believe stands condemned already because they have not believed in the name of God's one and only Son."
+                        ]
+                    }
+                };
+
+                this.versions = {
+                    niv: "New International Version",
+                    esv: "English Standard Version", 
+                    kjv: "King James Version",
+                    nlt: "New Living Translation",
+                    nasb: "New American Standard Bible"
+                };
+            }
+
+            getBooks() {
+                return this.books;
+            }
+
+            getChapters(book) {
+                return this.books[book]?.chapters || 0;
+            }
+
+            getVerses(book, chapter) {
+                return this.verses[book]?.[chapter] || ["Verse data not available for this chapter."];
+            }
+
+            getVersionName(version) {
+                return this.versions[version] || version.toUpperCase();
+            }
+        }
+
+        // === TIME-BASED THEME SYSTEM ===
+        class ThemeSystem {
+            constructor() {
+                this.themes = ['dawn', 'morning', 'daylight', 'sunset', 'evening', 'night'];
+                this.currentTheme = '';
+                this.manualOverride = false;
                 this.init();
             }
 
             init() {
-                this.setupCommunityFeatures();
-                this.setupOfflineCapabilities();
-                this.setupMultiLanguage();
-                this.setupAnalytics();
-                this.loadCommunityData();
-                console.log('🌍 Community System initialized!');
-            }
-
-            // === PHASE 4.1: SOCIAL FEATURES ===
-
-            setupCommunityFeatures() {
-                this.setupPrayerGroups();
-                this.setupTestimonySharing();
-                this.setupVerseChallenges();
-                this.setupEncourageFriends();
-            }
-
-            setupPrayerGroups() {
-                // Prayer group interactions
-                document.querySelectorAll('.group-card').forEach(card => {
-                    card.addEventListener('click', (e) => {
-                        const groupId = e.currentTarget.dataset.group;
-                        this.openPrayerGroup(groupId);
-                    });
-                });
-
-                // Prayer request actions
-                document.querySelectorAll('.action-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const action = e.target.textContent;
-                        this.handlePrayerAction(action, e.target.closest('.prayer-request'));
-                    });
-                });
-
-                // Add prayer request
-                document.querySelector('.btn-community')?.addEventListener('click', () => {
-                    this.showAddPrayerModal();
-                });
-            }
-
-            setupTestimonySharing() {
-                // Testimony interactions
-                document.querySelectorAll('.testimony-actions .action-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const action = e.target.textContent;
-                        this.handleTestimonyAction(action, e.target.closest('.testimony-card'));
-                    });
-                });
-
-                // Share testimony
-                document.querySelectorAll('.btn-community')[1]?.addEventListener('click', () => {
-                    this.showShareTestimonyModal();
-                });
-            }
-
-            setupVerseChallenges() {
-                // Challenge interactions
-                document.querySelectorAll('.challenge-card').forEach(card => {
-                    card.addEventListener('click', (e) => {
-                        const challenge = e.currentTarget.querySelector('.challenge-title').textContent;
-                        this.joinChallenge(challenge);
-                    });
-                });
-
-                // Join challenge button
-                document.querySelector('.btn-primary')?.addEventListener('click', () => {
-                    const activeChallenge = document.querySelector('.challenge-card.active .challenge-title').textContent;
-                    this.joinChallenge(activeChallenge);
-                });
-            }
-
-            setupEncourageFriends() {
-                // This would integrate with existing friend system
-                console.log('💝 Encourage friends system ready');
-            }
-
-            openPrayerGroup(groupId) {
-                const groupNames = {
-                    church: 'Church Family',
-                    family: 'Family Prayer', 
-                    youth: 'Youth Bible Study'
-                };
+                this.updateTimeBasedTheme();
+                this.setupEventListeners();
                 
-                this.showNotification(`Opening ${groupNames[groupId]} prayer group`);
-                // In full implementation, this would navigate to group chat
-            }
-
-            handlePrayerAction(action, prayerElement) {
-                const author = prayerElement.querySelector('.request-author').textContent;
-                
-                switch(action) {
-                    case '🙏 Pray':
-                        this.recordPrayer(author);
-                        break;
-                    case '💬 Encourage':
-                        this.sendEncouragement(author);
-                        break;
-                    case '🔄 Share':
-                        this.sharePrayerRequest(author);
-                        break;
-                }
-            }
-
-            handleTestimonyAction(action, testimonyElement) {
-                const currentCount = parseInt(action.match(/\d+/)?.[0]) || 0;
-                const newAction = action.replace(/\d+/, currentCount + 1);
-                testimonyElement.querySelector('.action-btn').textContent = newAction;
-                
-                this.showNotification('Interaction recorded!');
-            }
-
-            joinChallenge(challengeName) {
-                this.showNotification(`🎯 Joined ${challengeName}! Tracking your progress...`);
-                
-                // Update challenge progress
-                const challengeCard = document.querySelector('.challenge-card.active');
-                const progressBar = challengeCard.querySelector('.progress-fill');
-                const stats = challengeCard.querySelector('.challenge-stats');
-                
-                // Simulate progress update
-                setTimeout(() => {
-                    progressBar.style.width = '95%';
-                    stats.textContent = '7/7 days completed';
-                    this.showNotification('🎉 Challenge completed! Well done!');
-                }, 2000);
-            }
-
-            recordPrayer(author) {
-                this.showNotification(`🙏 Prayed for ${author}'s request`);
-                this.logCommunityActivity('prayer', author);
-            }
-
-            sendEncouragement(author) {
-                const message = prompt(`Send an encouraging message to ${author}:`);
-                if (message) {
-                    this.showNotification(`💝 Encouragement sent to ${author}`);
-                    this.logCommunityActivity('encouragement', author);
-                }
-            }
-
-            sharePrayerRequest(author) {
-                this.showNotification(`🔄 Shared ${author}'s prayer request`);
-                this.logCommunityActivity('share', author);
-            }
-
-            showAddPrayerModal() {
-                const title = prompt('Prayer request title:');
-                if (title) {
-                    const content = prompt('Prayer request details:');
-                    if (content) {
-                        this.addPrayerRequest(title, content);
+                // Update theme every minute
+                setInterval(() => {
+                    if (!this.manualOverride) {
+                        this.updateTimeBasedTheme();
                     }
-                }
+                }, 60000);
             }
 
-            showShareTestimonyModal() {
-                const title = prompt('Testimony title:');
-                if (title) {
-                    const content = prompt('Share what God has done:');
-                    if (content) {
-                        this.shareTestimony(title, content);
-                    }
-                }
+            updateTimeBasedTheme() {
+                const now = new Date();
+                const hour = now.getHours();
+                let theme = '';
+
+                if (hour >= 5 && hour < 8) theme = 'dawn';
+                else if (hour >= 8 && hour < 12) theme = 'morning';
+                else if (hour >= 12 && hour < 16) theme = 'daylight';
+                else if (hour >= 16 && hour < 18) theme = 'sunset';
+                else if (hour >= 18 && hour < 21) theme = 'evening';
+                else theme = 'night';
+
+                this.applyTheme(theme);
+                this.updateTimeDisplay(now);
             }
 
-            addPrayerRequest(title, content) {
-                this.showNotification('📝 Prayer request added to the community');
-                this.logCommunityActivity('prayer_request', title);
-            }
-
-            shareTestimony(title, content) {
-                this.showNotification('🌟 Testimony shared with the community');
-                this.logCommunityActivity('testimony', title);
-            }
-
-            // === PHASE 4.2: ADVANCED CAPABILITIES ===
-
-            setupOfflineCapabilities() {
-                this.checkOnlineStatus();
-                this.setupServiceWorker();
-                this.setupCacheManagement();
+            applyTheme(theme) {
+                // Remove all theme classes
+                document.body.classList.remove(...this.themes.map(t => `theme-${t}`));
                 
-                // Listen for online/offline events
-                window.addEventListener('online', () => this.handleOnlineStatus(true));
-                window.addEventListener('offline', () => this.handleOnlineStatus(false));
-            }
+                // Add current theme
+                document.body.classList.add(`theme-${theme}`);
+                this.currentTheme = theme;
 
-            setupServiceWorker() {
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.register('/sw.js')
-                        .then(registration => {
-                            console.log('📱 Service Worker registered');
-                            this.offlineEnabled = true;
-                            this.updateOfflineStatus();
-                        })
-                        .catch(error => {
-                            console.log('📱 Service Worker registration failed:', error);
-                        });
+                // Update indicator
+                const indicator = document.getElementById('timeThemeIndicator');
+                if (indicator) {
+                    indicator.textContent = this.getThemeDisplayName(theme);
+                    indicator.style.background = this.getThemeColor(theme);
                 }
             }
 
-            setupCacheManagement() {
-                // Cache management controls
-                document.querySelector('.btn-primary')?.addEventListener('click', () => {
-                    this.downloadOfflineContent();
-                });
+            getThemeDisplayName(theme) {
+                const names = {
+                    dawn: '🌅 Dawn Theme',
+                    morning: '🌄 Morning Theme', 
+                    daylight: '☀️ Daylight Theme',
+                    sunset: '🌇 Sunset Theme',
+                    evening: '🌆 Evening Theme',
+                    night: '🌙 Night Theme'
+                };
+                return names[theme] || theme;
             }
 
-            checkOnlineStatus() {
-                this.isOnline = navigator.onLine;
-                this.updateOfflineStatus();
+            getThemeColor(theme) {
+                const colors = {
+                    dawn: '#ff9a76',
+                    morning: '#4a6fa5',
+                    daylight: '#27ae60',
+                    sunset: '#e67e22',
+                    evening: '#9b59b6',
+                    night: '#2c3e50'
+                };
+                return colors[theme] || '#4a6fa5';
             }
 
-            handleOnlineStatus(online) {
-                this.isOnline = online;
-                this.updateOfflineStatus();
-                
-                if (online) {
-                    this.showNotification('🌐 Back online - Syncing data...');
-                    this.syncOfflineData();
-                } else {
-                    this.showNotification('📴 Offline mode - Using cached content');
-                }
-            }
-
-            updateOfflineStatus() {
-                const statusIndicator = document.querySelector('.status-indicator');
-                const statusText = document.querySelector('.offline-status div:last-child');
-                
-                if (this.isOnline) {
-                    statusIndicator.className = 'status-indicator status-online';
-                    statusText.textContent = 'Online - All features available';
-                } else {
-                    statusIndicator.className = 'status-indicator status-offline';
-                    statusText.textContent = 'Offline - Limited features';
-                }
-            }
-
-            downloadOfflineContent() {
-                this.showNotification('⬇️ Downloading content for offline use...');
-                
-                // Simulate download progress
-                let progress = 0;
-                const interval = setInterval(() => {
-                    progress += 10;
-                    if (progress >= 100) {
-                        clearInterval(interval);
-                        this.showNotification('✅ Offline content ready!');
-                        this.offlineEnabled = true;
-                    }
-                }, 200);
-            }
-
-            syncOfflineData() {
-                // Sync any locally stored data when coming back online
-                setTimeout(() => {
-                    this.showNotification('✅ All data synced successfully');
-                }, 1500);
-            }
-
-            setupMultiLanguage() {
-                this.loadLanguagePreference();
-                this.setupLanguageSelector();
-                this.applyLanguage(this.currentLanguage);
-            }
-
-            loadLanguagePreference() {
-                const savedLang = localStorage.getItem('bibleGreeter_language');
-                if (savedLang) {
-                    this.currentLanguage = savedLang;
-                }
-            }
-
-            setupLanguageSelector() {
-                document.querySelectorAll('.language-option').forEach(option => {
-                    option.addEventListener('click', (e) => {
-                        const language = e.currentTarget.textContent.trim();
-                        this.selectLanguage(language);
+            updateTimeDisplay(now) {
+                const timeElement = document.getElementById('currentTime');
+                if (timeElement) {
+                    timeElement.textContent = now.toLocaleTimeString([], { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
                     });
-                });
-            }
-
-            selectLanguage(language) {
-                document.querySelectorAll('.language-option').forEach(opt => {
-                    opt.classList.remove('active');
-                });
-                document.querySelector(`.language-option:contains("${language}")`).classList.add('active');
-                
-                this.currentLanguage = this.getLanguageCode(language);
-                this.applyLanguage(this.currentLanguage);
-                this.saveLanguagePreference();
-                
-                this.showNotification(`🌐 Language changed to ${language}`);
-            }
-
-            getLanguageCode(language) {
-                const codes = {
-                    'English': 'en',
-                    'Español': 'es',
-                    'Français': 'fr',
-                    'Deutsch': 'de',
-                    'Português': 'pt',
-                    '中文': 'zh'
-                };
-                return codes[language] || 'en';
-            }
-
-            applyLanguage(languageCode) {
-                // In a full implementation, this would update all text content
-                console.log(`Applying language: ${languageCode}`);
-                // This would typically involve fetching translation files and updating DOM
-            }
-
-            saveLanguagePreference() {
-                localStorage.setItem('bibleGreeter_language', this.currentLanguage);
-            }
-
-            setupAnalytics() {
-                this.setupPrivacyAnalytics();
-                this.updateAnalyticsDisplay();
-            }
-
-            setupPrivacyAnalytics() {
-                // Privacy-focused analytics setup
-                document.querySelectorAll('.toggle input').forEach(toggle => {
-                    toggle.addEventListener('change', (e) => {
-                        this.updatePrivacySettings(e.target.checked, e.target.closest('.notification-item').querySelector('.notification-title').textContent);
-                    });
-                });
-            }
-
-            updatePrivacySettings(enabled, setting) {
-                if (enabled) {
-                    this.logAnalyticsEvent(`setting_enabled`, setting);
-                    this.showNotification(`✅ ${setting} enabled`);
-                } else {
-                    this.logAnalyticsEvent(`setting_disabled`, setting);
-                    this.showNotification(`❌ ${setting} disabled`);
                 }
             }
 
-            updateAnalyticsDisplay() {
-                // Update analytics numbers with realistic data
-                const analyticsValues = document.querySelectorAll('.analytics-value');
-                if (analyticsValues.length >= 4) {
-                    analyticsValues[0].textContent = '87%';
-                    analyticsValues[1].textContent = '42';
-                    analyticsValues[2].textContent = '156';
-                    analyticsValues[3].textContent = '28';
-                }
+            cycleTheme() {
+                const currentIndex = this.themes.indexOf(this.currentTheme);
+                const nextIndex = (currentIndex + 1) % this.themes.length;
+                this.manualOverride = true;
+                this.applyTheme(this.themes[nextIndex]);
+                this.showNotification(`Theme changed to ${this.getThemeDisplayName(this.themes[nextIndex])}`);
             }
 
-            // === UTILITY METHODS ===
-
-            loadCommunityData() {
-                // Load community data from local storage or API
-                this.prayerGroups = JSON.parse(localStorage.getItem('bg_community_groups') || '[]');
-                this.testimonies = JSON.parse(localStorage.getItem('bg_community_testimonies') || '[]');
-                this.challenges = JSON.parse(localStorage.getItem('bg_community_challenges') || '[]');
+            resetToTimeTheme() {
+                this.manualOverride = false;
+                this.updateTimeBasedTheme();
+                this.showNotification('Theme reset to time-based mode');
             }
 
-            logCommunityActivity(type, details) {
-                const activity = {
-                    type,
-                    details,
-                    timestamp: new Date().toISOString(),
-                    anonymousId: this.getAnonymousUserId()
-                };
+            setupEventListeners() {
+                document.getElementById('themeCycleBtn')?.addEventListener('click', () => {
+                    this.cycleTheme();
+                });
 
-                // Store locally
-                const activities = JSON.parse(localStorage.getItem('bg_community_activities') || '[]');
-                activities.push(activity);
-                localStorage.setItem('bg_community_activities', JSON.stringify(activities.slice(-100))); // Keep last 100
+                document.getElementById('resetThemeBtn')?.addEventListener('click', () => {
+                    this.resetToTimeTheme();
+                });
 
-                this.logAnalyticsEvent('community_activity', type);
-            }
-
-            logAnalyticsEvent(category, action) {
-                // Privacy-focused analytics - no personal data
-                const event = {
-                    category,
-                    action,
-                    timestamp: Date.now(),
-                    anonymousId: this.getAnonymousUserId(),
-                    language: this.currentLanguage,
-                    online: this.isOnline
-                };
-
-                console.log('📊 Analytics Event:', event);
-                
-                // In production, this would send to analytics service
-                // while respecting privacy settings
-            }
-
-            getAnonymousUserId() {
-                let userId = localStorage.getItem('bg_anonymous_user_id');
-                if (!userId) {
-                    userId = 'user_' + Math.random().toString(36).substr(2, 9);
-                    localStorage.setItem('bg_anonymous_user_id', userId);
-                }
-                return userId;
+                document.getElementById('manualThemeBtn')?.addEventListener('click', () => {
+                    this.cycleTheme();
+                });
             }
 
             showNotification(message) {
@@ -1393,7 +712,7 @@
                     position: fixed;
                     bottom: 20px;
                     right: 20px;
-                    background: var(--community-color);
+                    background: var(--primary-color);
                     color: white;
                     padding: 15px 25px;
                     border-radius: 8px;
@@ -1410,68 +729,295 @@
             }
         }
 
-        // Initialize Community System
-        let communitySystem;
-
-        // Update main app initialization
-        class BibleApp {
+        // === INTERACTIVE BIBLE READER ===
+        class BibleReader {
             constructor() {
-                // Initialize all previous systems
-                this.contentSystem = new ContentSystem();
-                this.sharingService = new SharingService();
-                this.journalSystem = new JournalSystem();
-                this.advancedFeatures = new AdvancedFeatures();
-                this.securitySystem = new SecuritySystem();
-                
-                // Initialize community system last
-                communitySystem = new CommunitySystem();
-                
-                window.communitySystem = communitySystem;
-                
+                this.bibleData = new BibleData();
+                this.currentBook = 'genesis';
+                this.currentChapter = 1;
+                this.currentVersion = 'niv';
+                this.readingStats = {
+                    versesRead: 0,
+                    chaptersRead: 0,
+                    bookmarks: 0,
+                    readingTime: 0
+                };
                 this.init();
             }
 
             init() {
-                console.log('🌍 Bible Greeter App initialized with Community & Scalability!');
+                this.loadReadingStats();
+                this.setupEventListeners();
+                this.populateChapterSelect();
+                this.loadChapter();
+                this.updateStatsDisplay();
+            }
+
+            setupEventListeners() {
+                // Book selection
+                document.getElementById('bookSelect').addEventListener('change', (e) => {
+                    this.currentBook = e.target.value;
+                    this.currentChapter = 1;
+                    this.populateChapterSelect();
+                    this.loadChapter();
+                });
+
+                // Chapter selection
+                document.getElementById('chapterSelect').addEventListener('change', (e) => {
+                    this.currentChapter = parseInt(e.target.value);
+                    this.loadChapter();
+                });
+
+                // Version selection
+                document.getElementById('versionSelect').addEventListener('change', (e) => {
+                    this.currentVersion = e.target.value;
+                    this.loadChapter();
+                });
+
+                // Navigation
+                document.getElementById('prevChapter').addEventListener('click', () => {
+                    this.previousChapter();
+                });
+
+                document.getElementById('nextChapter').addEventListener('click', () => {
+                    this.nextChapter();
+                });
+
+                // Interactive buttons
+                document.getElementById('dailyVerseBtn').addEventListener('click', () => {
+                    this.showDailyVerse();
+                });
+
+                document.getElementById('audioPlayBtn').addEventListener('click', () => {
+                    this.playAudio();
+                });
+
+                document.getElementById('randomChapterBtn').addEventListener('click', () => {
+                    this.randomChapter();
+                });
+
+                document.getElementById('shareVerse').addEventListener('click', () => {
+                    this.shareCurrentVerse();
+                });
+
+                document.getElementById('addBookmark').addEventListener('click', () => {
+                    this.addBookmark();
+                });
+
+                document.getElementById('quickBookmarkBtn').addEventListener('click', () => {
+                    this.addBookmark();
+                });
+
+                // Verse click handling
+                document.getElementById('bibleContent').addEventListener('click', (e) => {
+                    if (e.target.classList.contains('verse')) {
+                        this.selectVerse(e.target);
+                    }
+                });
+            }
+
+            populateChapterSelect() {
+                const chapterSelect = document.getElementById('chapterSelect');
+                const chapterCount = this.bibleData.getChapters(this.currentBook);
                 
-                // Additional community-aware initializations
-                this.setupGlobalFeatures();
-            }
-
-            setupGlobalFeatures() {
-                // Setup any global community features
-                this.setupPushNotifications();
-            }
-
-            setupPushNotifications() {
-                if ('Notification' in window && Notification.permission === 'default') {
-                    // Request notification permission
-                    Notification.requestPermission().then(permission => {
-                        if (permission === 'granted') {
-                            console.log('🔔 Push notifications enabled');
-                        }
-                    });
+                chapterSelect.innerHTML = '';
+                for (let i = 1; i <= chapterCount; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = `Chapter ${i}`;
+                    if (i === this.currentChapter) {
+                        option.selected = true;
+                    }
+                    chapterSelect.appendChild(option);
                 }
             }
+
+            loadChapter() {
+                const verses = this.bibleData.getVerses(this.currentBook, this.currentChapter);
+                const bookName = this.bibleData.books[this.currentBook].name;
+                const versionName = this.bibleData.getVersionName(this.currentVersion);
+                
+                // Update display
+                document.getElementById('chapterDisplay').textContent = 
+                    `${bookName} ${this.currentChapter} (${versionName})`;
+                
+                document.getElementById('currentBook').textContent = bookName;
+
+                // Render verses
+                const content = document.getElementById('bibleContent');
+                content.innerHTML = verses.map((verse, index) => `
+                    <div class="verse" data-verse="${index + 1}">
+                        <span class="verse-number">${index + 1}</span>
+                        ${verse}
+                    </div>
+                `).join('');
+
+                // Update stats
+                this.readingStats.chaptersRead++;
+                this.readingStats.versesRead += verses.length;
+                this.updateStatsDisplay();
+                this.saveReadingStats();
+            }
+
+            previousChapter() {
+                if (this.currentChapter > 1) {
+                    this.currentChapter--;
+                    this.populateChapterSelect();
+                    this.loadChapter();
+                } else {
+                    this.showNotification('This is the first chapter of this book');
+                }
+            }
+
+            nextChapter() {
+                const chapterCount = this.bibleData.getChapters(this.currentBook);
+                if (this.currentChapter < chapterCount) {
+                    this.currentChapter++;
+                    this.populateChapterSelect();
+                    this.loadChapter();
+                } else {
+                    this.showNotification('This is the last chapter of this book');
+                }
+            }
+
+            selectVerse(verseElement) {
+                // Remove active class from all verses
+                document.querySelectorAll('.verse').forEach(v => v.classList.remove('active'));
+                
+                // Add active class to clicked verse
+                verseElement.classList.add('active');
+                
+                const verseNumber = verseElement.dataset.verse;
+                this.showNotification(`Selected verse ${verseNumber}`);
+            }
+
+            showDailyVerse() {
+                const dailyVerses = [
+                    { book: 'psalms', chapter: 23, verse: 1 },
+                    { book: 'john', chapter: 3, verse: 16 },
+                    { book: 'genesis', chapter: 1, verse: 1 }
+                ];
+                
+                const randomVerse = dailyVerses[Math.floor(Math.random() * dailyVerses.length)];
+                this.currentBook = randomVerse.book;
+                this.currentChapter = randomVerse.chapter;
+                
+                document.getElementById('bookSelect').value = this.currentBook;
+                this.populateChapterSelect();
+                this.loadChapter();
+                
+                this.showNotification('📖 Here is your daily verse!');
+            }
+
+            playAudio() {
+                this.showNotification('🔊 Playing audio Bible...');
+                // In a real app, this would integrate with text-to-speech API
+            }
+
+            randomChapter() {
+                const books = Object.keys(this.bibleData.books);
+                const randomBook = books[Math.floor(Math.random() * books.length)];
+                const chapterCount = this.bibleData.getChapters(randomBook);
+                const randomChapter = Math.floor(Math.random() * chapterCount) + 1;
+                
+                this.currentBook = randomBook;
+                this.currentChapter = randomChapter;
+                
+                document.getElementById('bookSelect').value = this.currentBook;
+                this.populateChapterSelect();
+                this.loadChapter();
+                
+                this.showNotification('🎲 Exploring random chapter...');
+            }
+
+            shareCurrentVerse() {
+                const bookName = this.bibleData.books[this.currentBook].name;
+                const selectedVerse = document.querySelector('.verse.active');
+                
+                if (selectedVerse) {
+                    const verseNumber = selectedVerse.dataset.verse;
+                    const verseText = selectedVerse.textContent.replace(verseNumber, '').trim();
+                    const shareText = `${bookName} ${this.currentChapter}:${verseNumber} - "${verseText}"`;
+                    
+                    this.showNotification('📤 Verse ready to share!');
+                    console.log('Share text:', shareText);
+                    // In real app, this would use Web Share API
+                } else {
+                    this.showNotification('Please select a verse to share');
+                }
+            }
+
+            addBookmark() {
+                this.readingStats.bookmarks++;
+                this.updateStatsDisplay();
+                this.saveReadingStats();
+                this.showNotification('🔖 Bookmark added!');
+            }
+
+            updateStatsDisplay() {
+                document.getElementById('versesRead').textContent = this.readingStats.versesRead;
+                document.getElementById('chaptersRead').textContent = this.readingStats.chaptersRead;
+                document.getElementById('bookmarksCount').textContent = this.readingStats.bookmarks;
+                document.getElementById('readingTime').textContent = Math.floor(this.readingStats.readingTime / 60);
+                
+                // Update progress
+                const totalChapters = Object.values(this.bibleData.books).reduce((sum, book) => sum + book.chapters, 0);
+                const completion = Math.min(100, Math.round((this.readingStats.chaptersRead / totalChapters) * 100));
+                document.getElementById('completionPercentage').textContent = completion + '%';
+                
+                // Update book progress
+                const book = this.bibleData.books[this.currentBook];
+                document.getElementById('bookProgress').textContent = `${this.currentChapter}/${book.chapters}`;
+                document.getElementById('bookProgressBar').style.width = `${(this.currentChapter / book.chapters) * 100}%`;
+            }
+
+            loadReadingStats() {
+                const saved = localStorage.getItem('bibleReader_stats');
+                if (saved) {
+                    this.readingStats = { ...this.readingStats, ...JSON.parse(saved) };
+                }
+                
+                // Start reading time counter
+                setInterval(() => {
+                    this.readingStats.readingTime++;
+                    this.updateStatsDisplay();
+                    this.saveReadingStats();
+                }, 60000);
+            }
+
+            saveReadingStats() {
+                localStorage.setItem('bibleReader_stats', JSON.stringify(this.readingStats));
+            }
+
+            showNotification(message) {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    background: var(--primary-color);
+                    color: white;
+                    padding: 15px 25px;
+                    border-radius: 8px;
+                    box-shadow: var(--shadow);
+                    z-index: 1000;
+                    font-weight: 600;
+                `;
+                notification.textContent = message;
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
         }
 
-        // Start the application when DOM is loaded
+        // Initialize the application
         document.addEventListener('DOMContentLoaded', () => {
-            new BibleApp();
-        });
-
-        // Service Worker for PWA (simulated)
-        if ('serviceWorker' in navigator) {
-            // In a real app, this would register an actual service worker
-            console.log('📱 PWA Service Worker ready for registration');
-        }
-
-        // Enhanced contains selector for language options
-        document.querySelectorAll('.language-option').forEach(option => {
-            option.addEventListener('click', function() {
-                const language = this.textContent.trim();
-                communitySystem.selectLanguage(language);
-            });
+            const themeSystem = new ThemeSystem();
+            const bibleReader = new BibleReader();
+            
+            console.log('📖 Dynamic Bible Greeter initialized!');
         });
     </script>
 </body>
